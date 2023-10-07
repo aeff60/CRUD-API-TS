@@ -1,22 +1,31 @@
+//โค้ดนี้เป็นการใช้ Express.js และ TypeORM เพื่อสร้าง RESTful API สำหรับการจัดการข้อมูลผู้ใช้ (User) ในฐานข้อมูล. ดังนี้คือคอมเมนต์ที่อธิบายโค้ด:
+
 import express, { Request, Response, NextFunction } from 'express';
 import { AppDataSource } from './data-source';
 import { User } from './entity/User';
 
+
+// Create Express Application:
 const app = express();
 const port = 4500;
 
-// Middleware to log requests
+// Middleware to log requests :  middleware ที่ใช้ในการล็อก request ทุกรายการที่เข้ามายัง server พร้อมกับ timestamp, method, และ URL.
 app.use((req: Request, res: Response, next: NextFunction) => {
   console.log(`[${new Date().toLocaleString()}] ${req.method} ${req.url}`);
   next();
 });
 
-// Middleware to parse JSON
+// Middleware to parse JSON : Middleware นี้ใช้ในการแปลงข้อมูล JSON ที่ถูกส่งมากับ request ให้กลายเป็น JavaScript objects.
 app.use(express.json());
 
-// Initialize the TypeORM connection
+// Initialize the TypeORM connection 
 AppDataSource.initialize().then(async () => {
+  // TypeORM ถูกใช้เพื่อเชื่อมต่อกับฐานข้อมูล. ถ้าเชื่อมต่อสำเร็จ, ข้อความ "Connected to the database" จะถูกล็อก.
   console.log('Connected to the database');
+
+
+  //Define API Endpoints:
+
 
   // Get all users
   app.get('/users', async (req: Request, res: Response) => {
